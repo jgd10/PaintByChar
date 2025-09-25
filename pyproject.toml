@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PaintByChar"
+version = "0.1.0"
+description = "Convert grid strings to colored images with per-character coloring."
+authors = [
+    { name = "James Derrick", email = "jgd10.github@gmail.com" }
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+dependencies = [
+    "pillow",
+    "matplotlib"
+]
+
+[project.urls]
+Homepage = "https://github.com/jgd10/PaintByChar"
