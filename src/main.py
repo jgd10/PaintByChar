@@ -1,7 +1,7 @@
 from enum import Enum
 from pathlib import Path
 from typing import Optional
-
+import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -12,11 +12,6 @@ class FillOption(Enum):
 
 
 def get_colormap_dict(colormap_name: str) -> dict[str, tuple[int, ...]]:
-    try:
-        import matplotlib.pyplot as plt
-    except ImportError as error:
-        raise ImportError(
-            "matplotlib is required for colormap presets") from error
     cmap = plt.get_cmap(colormap_name)
     colors = [tuple(int(255 * c) for c in cmap(i / 9)[:3]) for i in range(10)]
     return {str(i): colors[i] for i in range(10)}
@@ -38,8 +33,6 @@ class InputError(Exception):
 
 def check_grid_string(grid_str: str) -> bool:
     lines = grid_str.strip().split('\n')
-    if not lines:
-        return False
     width = len(lines[0])
     if width == 0:
         raise InputError("The string block must not be empty.")
@@ -47,6 +40,7 @@ def check_grid_string(grid_str: str) -> bool:
         if len(line) != width:
             raise InputError("All lines in the string block must have the "
                              "same length.")
+    return True
 
 
 def file_to_image(file_path: Path | str,
@@ -137,10 +131,3 @@ def save_image(img: Image, out_path: Path | str) -> None:
     img.save(out_path)
     print(f"Saved image to {out_path}")
 
-
-# Example usage:
-if __name__ == "__main__":
-    grid = Path('../tests/example4.txt').read_text()
-    block_to_image(grid, preset='viridis', bg_color=(240, 240, 240),
-                   cell_size=40, out_path='viridis_grid_chars.png',
-                   fill_option=FillOption.BACKGROUND, font_size=32)
