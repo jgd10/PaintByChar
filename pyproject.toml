@@ -19,7 +19,3 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/jgd10/PaintByChar"
-
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
