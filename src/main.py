@@ -91,19 +91,19 @@ def file_to_image(file_path: Path | str,
     """
     grid_str = Path(file_path).read_text()
     check_grid_string(grid_str)
-    img = block_to_image(grid_str, char_color_map, preset, bg_color, cell_size,
-                         fill_option, font_path, font_size)
+    img = string_to_image(grid_str, char_color_map, preset, bg_color, cell_size,
+                          fill_option, font_path, font_size)
     return img
 
 
-def block_to_image(grid_str: str,
-                   char_color_map: Optional[dict[str, tuple[int, ...]]] = None,
-                   preset: Optional[str] = None,
-                   bg_color: tuple[int, int, int] = (255, 255, 255),
-                   cell_size: int = 32,
-                   fill_option: FillOption = FillOption.CHARS,
-                   font_path: Path = None,
-                   font_size: Optional[int] = None) -> Image:
+def string_to_image(grid_str: str,
+                    char_color_map: Optional[dict[str, tuple[int, ...]]] = None,
+                    preset: Optional[str] = None,
+                    bg_color: tuple[int, int, int] = (255, 255, 255),
+                    cell_size: int = 32,
+                    fill_option: FillOption = FillOption.CHARS,
+                    font_path: Path = None,
+                    font_size: Optional[int] = None) -> Image:
     """Convert a string block to an image.
 
     Args:
