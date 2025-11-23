@@ -3,6 +3,51 @@ from pathlib import Path
 from typing import Optional
 import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
+from typing import Tuple, Union
+
+
+COLOR_PRESETS: dict[str, tuple[int, int, int]] = {
+    "white": (255, 255, 255),
+    "black": (0, 0, 0),
+    "light_gray": (245, 245, 245),
+    "dark_gray": (50, 50, 50),
+    "pastel_blue": (174, 198, 207),
+    "pastel_green": (152, 251, 152),
+    "pastel_pink": (255, 182, 193),
+    "cream": (255, 253, 208),
+    "beige": (245, 245, 220),
+    "mint": (189, 252, 201),
+    "navy": (10, 25, 47),
+    "charcoal": (34, 40, 49),
+    "soft_yellow": (255, 250, 205),
+    "gray": (128, 128, 128),
+    "blue": (70, 130, 180),
+    "green": (60, 179, 113),
+    "pink": (255, 182, 193),
+    "yellow": (255, 223, 0),
+    "teal": (0, 128, 128),
+    "brown": (139, 69, 19),
+    "red": (220, 20, 60),
+}
+
+
+def resolve_color(value: Union[str, Tuple[int, int, int]]) -> tuple[int, int, int]:
+    """
+    Resolve a color value which can be:
+    - a preset name from BG_PRESETS (e.g., 'cream')
+    - an RGB tuple already (e.g., (255, 255, 255))
+    Returns an (R, G, B) tuple.
+    """
+    if isinstance(value, tuple):
+        for channel in value:
+            if not (0 <= channel <= 255):
+                raise ValueError(f"RGB channel value {channel} out of range 0-255")
+        return value
+    if isinstance(value, str):
+        if value in COLOR_PRESETS:
+            return COLOR_PRESETS[value]
+    raise ValueError(f"Unsupported bg color: {value}")
+
 
 
 class FillOption(Enum):
@@ -99,7 +144,7 @@ def file_to_image(file_path: Path | str,
 def string_to_image(grid_str: str,
                     char_color_map: Optional[dict[str, tuple[int, ...]]] = None,
                     preset: Optional[str] = None,
-                    bg_color: tuple[int, int, int] = (255, 255, 255),
+                    bg_color: tuple[int, int, int] | str = (255, 255, 255),
                     cell_size: int = 32,
                     fill_option: FillOption = FillOption.CHARS,
                     font_path: Path = None,
@@ -110,7 +155,8 @@ def string_to_image(grid_str: str,
         grid_str (str): The string block representing the grid.
         char_color_map (Optional[dict[str, tuple[int, ...]]]): Mapping of characters to RGB colors.
         preset (Optional[str]): Name of a preset colormap to use.
-        bg_color (tuple[int, int, int]): Background color as an RGB tuple.
+        bg_color (tuple[int, int, int] | str): Background color as an RGB tuple
+        or one of the preset strings.
         cell_size (int): Size of each cell in pixels.
         fill_option (FillOption): Option for filling characters and/or background.
         font_path (Path): Path to the font file to use for rendering text.
@@ -124,6 +170,7 @@ def string_to_image(grid_str: str,
 
     char_color_map, font = get_set_mappings(cell_size, char_color_map,
                                             font_path, font_size, preset)
+    bg_color = resolve_color(bg_color)
 
     img = Image.new('RGB', (width * cell_size, height * cell_size), bg_color)
     draw = ImageDraw.Draw(img)
@@ -134,7 +181,7 @@ def string_to_image(grid_str: str,
             draw.rectangle(xy, fill=bg_color)
             match fill_option:
                 case FillOption.BACKGROUND:
-                    color = char_color_map.get(char, (0, 0, 0))
+                    color = resolve_color(char_color_map.get(char, (0, 0, 0)))
                     draw.rectangle(xy, fill=color)
                     bbox = draw.textbbox((0, 0), char, font=font)
                     w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
@@ -142,10 +189,10 @@ def string_to_image(grid_str: str,
                     ty = y * cell_size + (cell_size - h) // 2
                     draw.text((tx, ty), char, fill=bg_color, font=font)
                 case FillOption.BOTH:
-                    color = char_color_map.get(char, (0, 0, 0))
+                    color = resolve_color(char_color_map.get(char, (0, 0, 0)))
                     draw.rectangle(xy, fill=color)
                 case FillOption.CHARS:
-                    color = char_color_map.get(char, (0, 0, 0))
+                    color = resolve_color(char_color_map.get(char, (0, 0, 0)))
                     bbox = draw.textbbox((0, 0), char, font=font)
                     w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
                     tx = x * cell_size + (cell_size - w) // 2
