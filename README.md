@@ -1,2 +1,7 @@
 # PaintByChar
-Python package in-progress which will take a 2D grid of chars and turn that into an image with eeach square colored by the char in that square. WIP.
+
+Python package providing simple functions that will take a rectangular grid of 
+characters and "paint" each character pre-assigned colors into a final image.
+
+The background of each character can also be assigned a color, leading to complex 
+images made up of colored characters.
