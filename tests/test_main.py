@@ -57,12 +57,12 @@ def test_get_set_mappings_font_fallback():
             or isinstance(font, ImageFont.ImageFont))
 
 
-def test_block_to_image_fill_both_pixel_color():
+def test_string_to_image_fill_both_pixel_color():
     m = load_main_module()
     # single-cell grid; use a deterministic color
     grid = "A"
     char_color_map = {"A": (10, 20, 30)}
-    img = m.block_to_image(grid,
+    img = m.string_to_image(grid,
                            char_color_map=char_color_map,
                            cell_size=10,
                            fill_option=m.FillOption.BOTH)
@@ -71,12 +71,12 @@ def test_block_to_image_fill_both_pixel_color():
     assert img.getpixel((5, 5)) == (10, 20, 30)
 
 
-def test_block_to_image_fill_background_pixel_color():
+def test_string_to_image_fill_background_pixel_color():
     m = load_main_module()
     # single-cell grid; use a deterministic color
     grid = "`"
     char_color_map = {"`": (40, 50, 60)}
-    img = m.block_to_image(grid,
+    img = m.string_to_image(grid,
                            char_color_map=char_color_map,
                            cell_size=100,
                            fill_option=m.FillOption.BACKGROUND)
@@ -86,12 +86,12 @@ def test_block_to_image_fill_background_pixel_color():
     assert img.getpixel((5, 5)) == (40, 50, 60)
 
 
-def test_block_to_image_fill_chars_pixel_color():
+def test_string_to_image_fill_chars_pixel_color():
     m = load_main_module()
     # single-cell grid; use a deterministic color
     grid = "■"
     char_color_map = {"■": (70, 80, 90)}
-    img = m.block_to_image(grid,
+    img = m.string_to_image(grid,
                            char_color_map=char_color_map,
                            cell_size=10,
                            fill_option=m.FillOption.CHARS)
@@ -100,11 +100,11 @@ def test_block_to_image_fill_chars_pixel_color():
     assert img.getpixel((5, 5)) == (70, 80, 90)
 
 
-def test_block_to_image_invalid_fill_option():
+def test_string_to_image_invalid_fill_option():
     m = load_main_module()
     grid = "A"
     with pytest.raises(ValueError):
-        m.block_to_image(grid,
+        m.string_to_image(grid,
                          char_color_map={"A": (0, 0, 0)},
                          cell_size=10,
                          fill_option="INVALID_OPTION")
@@ -123,7 +123,7 @@ def test_preset_applied_to_char_color_map(colormap_name):
     m = load_main_module()
     cmap = plt.get_cmap(colormap_name)
     grid = "5"
-    img = m.block_to_image(grid,
+    img = m.string_to_image(grid,
                            preset=colormap_name,
                            cell_size=90,
                            fill_option=m.FillOption.BOTH)
@@ -195,7 +195,7 @@ def test_save_image_to_path(tmp_path):
     from PIL import Image
     m = load_main_module()
     grid = "A"
-    img = m.block_to_image(grid,
+    img = m.string_to_image(grid,
                            char_color_map={"A": (100, 150, 200)},
                            cell_size=10,
                            fill_option=m.FillOption.BOTH)
@@ -205,3 +205,49 @@ def test_save_image_to_path(tmp_path):
     loaded_img = Image.open(output_path)
     assert loaded_img.size == img.size
     assert loaded_img.getpixel((5, 5)) == (100, 150, 200)
+
+
+class TestColorPresets:
+    @pytest.mark.parametrize("preset_name", [
+        "white",
+        "black",
+        "light_gray",
+        "dark_gray",
+        "pastel_blue",
+        "pastel_green",
+        "pastel_pink",
+        "cream",
+        "beige",
+        "mint",
+        "navy",
+        "charcoal",
+        "soft_yellow",
+        "gray",
+        "blue",
+        "green",
+        "pink",
+        "yellow",
+        "teal",
+        "brown",
+        "red"])
+    def test_resolve_color_valid(self, preset_name):
+        m = load_main_module()
+        color = m.resolve_color(preset_name)
+        assert isinstance(color, tuple)
+        assert len(color) == 3
+        for channel in color:
+            assert 0 <= channel <= 255
+
+    @pytest.mark.parametrize("invalid_value", [
+        "unknown_color",
+        (256, 0, 0),
+        (-1, 0, 0),
+        "123,456,789",
+        12345,
+        None])
+    def test_resolve_color_invalid(self, invalid_value):
+        m = load_main_module()
+        with pytest.raises(ValueError):
+            color = m.resolve_color(invalid_value)
+            for channel in color:
+                assert 0 <= channel <= 255
