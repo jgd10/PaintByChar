@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
 from typing import Tuple, Union
 
+from PIL.ImageFont import FreeTypeFont
+
 
 COLOR_PRESETS: dict[str, tuple[int, int, int]] = {
     "white": (255, 255, 255),
@@ -39,22 +41,28 @@ def resolve_color(value: Union[str, Tuple[int, int, int]]) -> tuple[int, int, in
     Returns an (R, G, B) tuple.
     """
     if isinstance(value, tuple):
+        if len(value) != 3:
+            raise ValueError(f"RGB tuple must have 3 elements, got {len(value)}")
         for channel in value:
+            if not isinstance(channel, int):
+                raise ValueError(f"RGB channel value {channel} is not an integer")
             if not (0 <= channel <= 255):
                 raise ValueError(f"RGB channel value {channel} out of range 0-255")
         return value
     if isinstance(value, str):
-        if value in COLOR_PRESETS:
+        if value.lower() in COLOR_PRESETS:
             return COLOR_PRESETS[value]
     raise ValueError(f"Unsupported bg color: {value}")
 
 
 
-class FillOption(Enum):
+class RenderStyle(Enum):
     """Enumeration for fill options in the image generation."""
-    CHARS = 1
-    BACKGROUND = 2
-    BOTH = 3
+    COLORED_CELLS = "colored_cells"
+    COLORED_TEXT = "colored_text"
+    COLORED_CELLS_WITH_BACKGROUND_TEXT = (
+        "colored_cells_with_background_text"
+    )
 
 
 def get_colormap_dict(colormap_name: str) -> dict[str, tuple[int, ...]]:
@@ -102,130 +110,132 @@ def check_grid_string(grid_str: str) -> bool:
         bool: True if all lines have the same length.
     """
     lines = grid_str.strip().split('\n')
-    width = len(lines[0])
-    if width == 0:
-        raise InputError("The string block must not be empty.")
+    max_width = 0
     for line in lines:
-        if len(line) != width:
-            raise InputError("All lines in the string block must have the "
-                             "same length.")
+        max_width = max(max_width, len(line))
+    if max_width == 0:
+        raise InputError("The string block must not be empty.")
     return True
 
 
 def file_to_image(file_path: Path | str,
-                  char_color_map: Optional[dict[str, tuple[int, ...]]] = None,
+                  value_colors: Optional[dict[str, tuple[int, ...]]] = None,
                   preset: Optional[str] = None,
-                  bg_color: tuple[int, int, int] = (255, 255, 255),
+                  background_color: tuple[int, int, int] = (255, 255, 255),
                   cell_size: int = 32,
-                  fill_option: FillOption = FillOption.CHARS,
+                  render_style: RenderStyle = RenderStyle.COLORED_CELLS,
                   font_path: Path = None,
                   font_size: Optional[int] = None) -> Image:
     """Read a string block from a file and convert it to an image.
 
     Args:
         file_path (Path | str): Path to the file containing the string block.
-        char_color_map (Optional[dict[str, tuple[int, ...]]]): Mapping of characters to RGB colors.
+        value_colors (Optional[dict[str, tuple[int, ...]]]): Mapping of values to RGB colors.
         preset (Optional[str]): Name of a preset colormap to use.
-        bg_color (tuple[int, int, int]): Background color as an RGB tuple.
+        background_color (tuple[int, int, int]): Background color as an RGB tuple.
         cell_size (int): Size of each cell in pixels.
-        fill_option (FillOption): Option for filling characters and/or background.
+        render_style (RenderStyle): Style for rendering the image.
         font_path (Path): Path to the font file to use for rendering text.
         font_size (Optional[int]): Size of the font to use for rendering text.
     Returns:
         Image: The generated image.
     """
     grid_str = Path(file_path).read_text()
-    check_grid_string(grid_str)
-    img = string_to_image(grid_str, char_color_map, preset, bg_color, cell_size,
-                          fill_option, font_path, font_size)
+    img = string_to_image(grid_str, value_colors, preset, background_color, cell_size,
+                          render_style, font_path, font_size)
     return img
 
 
 def string_to_image(grid_str: str,
-                    char_color_map: Optional[dict[str, tuple[int, ...]]] = None,
+                    value_colors: Optional[dict[str, tuple[int, ...]]] = None,
                     preset: Optional[str] = None,
-                    bg_color: tuple[int, int, int] | str = (255, 255, 255),
+                    background_color: tuple[int, int, int] | str = (255, 255, 255),
                     cell_size: int = 32,
-                    fill_option: FillOption = FillOption.CHARS,
+                    render_style: RenderStyle = RenderStyle.COLORED_CELLS,
                     font_path: Path = None,
                     font_size: Optional[int] = None) -> Image:
     """Convert a string block to an image.
 
     Args:
         grid_str (str): The string block representing the grid.
-        char_color_map (Optional[dict[str, tuple[int, ...]]]): Mapping of characters to RGB colors.
+        value_colors (Optional[dict[str, tuple[int, ...]]]): Mapping of values to RGB colors.
         preset (Optional[str]): Name of a preset colormap to use.
-        bg_color (tuple[int, int, int] | str): Background color as an RGB tuple
+        background_color (tuple[int, int, int] | str): Background color as an RGB tuple
         or one of the preset strings.
         cell_size (int): Size of each cell in pixels.
-        fill_option (FillOption): Option for filling characters and/or background.
+        render_style (RenderStyle): Style for rendering the image.
         font_path (Path): Path to the font file to use for rendering text.
         font_size (Optional[int]): Size of the font to use for rendering text.
     Returns:
         Image: The generated image.
     """
+    check_grid_string(grid_str)
     lines = grid_str.strip().split('\n')
     height = len(lines)
     width = max(len(line) for line in lines)
 
-    char_color_map, font = get_set_mappings(cell_size, char_color_map,
+    value_colors, font = get_set_mappings(cell_size, value_colors,
                                             font_path, font_size, preset)
-    bg_color = resolve_color(bg_color)
+    background_color = resolve_color(background_color)
 
-    img = Image.new('RGB', (width * cell_size, height * cell_size), bg_color)
+    img = Image.new('RGB', (width * cell_size, height * cell_size), background_color)
     draw = ImageDraw.Draw(img)
     for y, line in enumerate(lines):
         for x, char in enumerate(line):
             xy = [x * cell_size, y * cell_size, (x + 1) * cell_size,
                   (y + 1) * cell_size]
-            draw.rectangle(xy, fill=bg_color)
-            match fill_option:
-                case FillOption.BACKGROUND:
-                    color = resolve_color(char_color_map.get(char, (0, 0, 0)))
+            draw.rectangle(xy, fill=background_color)
+            match render_style:
+                case RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT:
+                    color = resolve_color(value_colors.get(char, (0, 0, 0)))
                     draw.rectangle(xy, fill=color)
-                    bbox = draw.textbbox((0, 0), char, font=font)
-                    w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
-                    tx = x * cell_size + (cell_size - w) // 2
-                    ty = y * cell_size + (cell_size - h) // 2
-                    draw.text((tx, ty), char, fill=bg_color, font=font)
-                case FillOption.BOTH:
-                    color = resolve_color(char_color_map.get(char, (0, 0, 0)))
+                    draw_character(background_color, cell_size, char, draw,
+                                   font, x, y)
+                case RenderStyle.COLORED_CELLS:
+                    color = resolve_color(value_colors.get(char, (0, 0, 0)))
                     draw.rectangle(xy, fill=color)
-                case FillOption.CHARS:
-                    color = resolve_color(char_color_map.get(char, (0, 0, 0)))
-                    bbox = draw.textbbox((0, 0), char, font=font)
-                    w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
-                    tx = x * cell_size + (cell_size - w) // 2
-                    ty = y * cell_size + (cell_size - h) // 2
-                    draw.text((tx, ty), char, fill=color, font=font)
+                case RenderStyle.COLORED_TEXT: 
+                    color = resolve_color(value_colors.get(char, (0, 0, 0)))
+                    draw_character(color, cell_size, char, draw,
+                                   font, x, y)
                 case _:
                     raise ValueError(
-                        f"Invalid show_chars option: {fill_option}")
+                        f"Invalid show_chars option: {render_style}")
     return img
 
 
+def draw_character(background_color: tuple[int, int, int], cell_size: int,
+                   char: str, draw: ImageDraw, font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
+                   x: int, y: int):
+    bbox = draw.textbbox((0, 0), char, font=font)
+    w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    tx = x * cell_size + (cell_size - w) // 2
+    ty = y * cell_size + (cell_size - h) // 2
+    draw.text((tx, ty), char, fill=background_color, font=font)
+
+
 def get_set_mappings(cell_size: int,
-                     char_color_map: Optional[dict[str, tuple[int, ...]]],
+                     value_colors: Optional[dict[str, tuple[int, ...]]],
                      font_path: Optional[Path], font_size: int, preset: str)\
         -> \
 tuple[
     dict[str, tuple[int, ...]], ImageFont.FreeTypeFont | ImageFont.ImageFont]:
-    """Get character color mapping and font.
+    """Get value color mapping and font.
 
     Args:
         cell_size (int): Size of each cell in pixels.
-        char_color_map (Optional[dict[str, tuple[int, ...]]]): Mapping of characters to RGB colors.
+        value_colors (Optional[dict[str, tuple[int, ...]]]): Mapping of values to RGB colors.
         font_path (Optional[Path]): Path to the font file to use for rendering text.
         font_size (int): Size of the font to use for rendering text.
         preset (str): Name of a preset colormap to use.
     Returns:
         tuple[dict[str, tuple[int, ...]], ImageFont.FreeTypeFont | ImageFont.ImageFont]:
-        The character color mapping and the font object.
+        The value color mapping and the font object.
     """
     if preset:
-        char_color_map = PRESETS.get(preset, {})
-    elif char_color_map is None:
-        char_color_map = {}
+        value_colors = PRESETS.get(preset, {})
+    elif value_colors is None:
+        value_colors = {}
     # Use bold Consolas if available, else fallback
     if font_path is None:
         font_path = "consolab.ttf"  # Bold Consolas
@@ -235,7 +245,7 @@ tuple[
         font = ImageFont.truetype(font_path, font_size)
     except OSError:
         font = ImageFont.load_default()
-    return char_color_map, font
+    return value_colors, font
 
 
 def save_image(img: Image, out_path: Path | str) -> None:
@@ -250,3 +260,15 @@ def save_image(img: Image, out_path: Path | str) -> None:
     img.save(out_path)
     print(f"Saved image to {out_path}")
 
+
+if __name__ == "__main__":
+    # Example usage
+    example_grid = """\
+0123456789
+98765.....
+01234....9
+98765...10
+"""
+    img = string_to_image(example_grid, background_color='red', preset='viridis', cell_size=32,
+                          render_style=RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT)
+    save_image(img, "example_output.png")
