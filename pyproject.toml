@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "PaintByChar"
-version = "0.1.0"
+version = "0.4.0"
 description = "Convert grid strings to colored images with per-character coloring."
 authors = [
     { name = "James Derrick", email = "jgd10.github@gmail.com" }
