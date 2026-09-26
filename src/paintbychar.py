@@ -260,15 +260,3 @@ def save_image(img: Image, out_path: Path | str) -> None:
     img.save(out_path)
     print(f"Saved image to {out_path}")
 
-
-if __name__ == "__main__":
-    # Example usage
-    example_grid = """\
-0123456789
-98765.....
-01234....9
-98765...10
-"""
-    img = string_to_image(example_grid, background_color='red', preset='viridis', cell_size=32,
-                          render_style=RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT)
-    save_image(img, "example_output.png")
