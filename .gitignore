@@ -209,3 +209,5 @@ __marimo__/
 
 *.png
 .idea/
+
+examples/generated/
