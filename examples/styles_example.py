@@ -7,7 +7,8 @@ def main():
     grid = """A1
 2B
 """
-    outdir = Path(__file__).resolve().parent
+    outdir = Path(__file__).resolve().parent / "generated"
+    outdir.mkdir(parents=True, exist_ok=True)
 
     # Colored cells (fills each cell with the mapped color)
     img1 = pbc.string_to_image(grid, value_colors={"A": (255, 0, 0), "1": (0, 255, 0),

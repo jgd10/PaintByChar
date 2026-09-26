@@ -4,6 +4,9 @@ import paintbychar as pbc
 
 
 def main():
+    output_dir = Path(__file__).resolve().parent / "generated"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     # Print available presets
     print("Available presets:", sorted(pbc.PRESETS.keys()))
 
@@ -11,7 +14,7 @@ def main():
     grid = "0123456789"
     img = pbc.string_to_image(grid, preset="plasma", cell_size=32,
                               render_style=pbc.RenderStyle.COLORED_CELLS)
-    out = Path(__file__).resolve().parent / "output_preset_plasma.png"
+    out = output_dir / "output_preset_plasma.png"
     pbc.save_image(img, out)
 
     # Demonstrate get_colormap_dict directly
