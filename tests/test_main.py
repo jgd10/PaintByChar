@@ -65,8 +65,10 @@ class TestRenderStyle:
                                 render_style=m.RenderStyle.COLORED_TEXT,
                                 value_colors={"O": (200, 201, 202)})
         pixels = set(img.getdata())
-        m.save_image(img, "test_output1.png")  # Save the image for visual 
-        # inspection
+        current_dir = Path(__file__).parent
+        output_dir = current_dir / "output_images"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        m.save_image(img, output_dir / "test_output1.png")
         assert (11, 22, 33) in pixels
         assert (200, 201, 202) in pixels
 
@@ -78,7 +80,10 @@ class TestRenderStyle:
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
                                 value_colors={"O": (200, 201, 202)})
         pixels = set(img.getdata())
-        m.save_image(img, "test_output2.png")  # Save the image for visual 
+        current_dir = Path(__file__).parent
+        output_dir = current_dir / "output_images"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        m.save_image(img, output_dir / "test_output2.png")
         assert (200, 201, 202) in pixels
         assert (11, 22, 33) in pixels
 
