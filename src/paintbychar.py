@@ -7,6 +7,8 @@ from typing import Tuple, Union
 
 from PIL.ImageFont import FreeTypeFont
 
+__version__ = "0.5.0"
+
 
 COLOR_PRESETS: dict[str, tuple[int, int, int]] = {
     "white": (255, 255, 255),
