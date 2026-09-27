@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 from PIL import ImageFont
+from fontTools.t1Lib import font_dictionary_keys
 
 
 def load_main_module():
@@ -63,7 +64,8 @@ class TestRenderStyle:
         img = m.string_to_image("O", background_color=(11, 22, 33),
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_TEXT,
-                                value_colors={"O": (200, 201, 202)})
+                                value_colors={"O": (200, 201, 202)},
+                                font_size=44)
         pixels = set(img.getdata())
         current_dir = Path(__file__).parent
         output_dir = current_dir / "output_images"
@@ -78,7 +80,8 @@ class TestRenderStyle:
         img = m.string_to_image("O", background_color=(11, 22, 33),
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
-                                value_colors={"O": (200, 201, 202)})
+                                value_colors={"O": (200, 201, 202)},
+                                font_size=44)
         pixels = set(img.getdata())
         current_dir = Path(__file__).parent
         output_dir = current_dir / "output_images"
