@@ -53,7 +53,16 @@ pbc.save_image(img, "output_basic.png")
 
 ## Example output
 
-![](https://github.com/jgd10/PaintByChar/blob/main/output_basic.png)
+<div align="center">
+  <img src="README_assets/output_basic.png" alt="Basic example output" width="640" />
+</div>
+
+### More example images
+
+<div align="center">
+  <img src="README_assets/style_colored_text.png" alt="Styled text output" width="320" />
+  <img src="README_assets/output_preset_plasma.png" alt="Preset output" width="320" />
+</div>
 
 ## More examples
 

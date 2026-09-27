@@ -7,7 +7,7 @@ from typing import Tuple, Union
 
 from PIL.ImageFont import FreeTypeFont
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 
 COLOR_PRESETS: dict[str, tuple[int, int, int]] = {

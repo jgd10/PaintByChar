@@ -22,6 +22,8 @@ img = pbc.string_to_image(
 pbc.save_image(img, "output_basic.png")
 ```
 
+![Basic example output](assets/output_basic.png)
+
 See the full script in [examples/basic_example.py](https://github.com/jgd10/PaintByChar/blob/main/examples/basic_example.py).
 
 ## Reading from a file
@@ -64,6 +66,8 @@ img = pbc.string_to_image(
 pbc.save_image(img, "style_colored_text.png")
 ```
 
+![Render style output](assets/style_colored_text.png)
+
 See [examples/styles_example.py](https://github.com/jgd10/PaintByChar/blob/main/examples/styles_example.py).
 
 ## Preset based mapping
@@ -80,5 +84,7 @@ img = pbc.string_to_image(
 )
 pbc.save_image(img, "output_preset_plasma.png")
 ```
+
+![Preset example output](assets/output_preset_plasma.png)
 
 See [examples/preset_example.py](https://github.com/jgd10/PaintByChar/blob/main/examples/preset_example.py).
