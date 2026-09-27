@@ -38,4 +38,4 @@ pbc.save_image(img, out)
 
 ### Example Output
 
-![]('output_basic.png')
+![](https://github.com/jgd10/PaintByChar/blob/main/output_basic.png)
