@@ -87,14 +87,15 @@ def visualize_steps(path: list[tuple[int, int, int]]):
     cmap = plt.get_cmap("terrain")
     value_colors = {k: tuple([int(255 * c) for c in cmap(i / 28)[0:3]]) for
                     i, k in enumerate('abcdefghijklmnopqrstuvwxyz')}
-    value_colors = {**value_colors, 'S': 'black', 'E': 'white', '*': 'red'}
+    value_colors = {**value_colors, 'S': (160, 32, 240), 'E': (255, 255, 255), 
+                    '*': 'red'}
     for i, cell in enumerate(path):
         path_by_step.append(cell)
         string = draw_path_on_terrain(TERRAIN, path_by_step)
 
         img = pbc.string_to_image(string, value_colors=value_colors,
-                                  cell_size=24,
-                                  render_style=pbc.RenderStyle.COLORED_CELLS)
+                                  cell_size=24, background_color='charcoal',
+                                  render_style=pbc.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT)
         out = Path(__file__).resolve().parent / "generated"
         pbc.save_image(img, out / f"path_step_{i:03d}.png")
 
