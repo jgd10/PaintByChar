@@ -1,6 +1,6 @@
 # PaintByChar
 
-<img src="assets/logo.png" alt="PaintByChar logo" width="600" />
+<img src="assets/logo.png" alt="PaintByChar logo" width="200" />
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.12](https://img.shields.io/badge/python-3.12+-blue.svg)](https://python.org)
@@ -67,7 +67,8 @@ The repository includes several runnable examples in the [`examples/`](examples/
 
 ## API reference
 
-See the [documentation](docs/api.md) for a quick overview of the public functions and options, or browse the live docs site once GitHub Pages is enabled.
+See the [documentation](docs/api.md) for a quick overview of the public functions 
+and options, or browse the [live docs site](https://jgd10.github.io/PaintByChar/).
 
 ## Contributing
 
