@@ -65,7 +65,7 @@ class TestRenderStyle:
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_TEXT,
                                 value_colors={"O": (200, 201, 202)},
-                                font_size=44)
+                                font_size=166)
         pixels = set(img.getdata())
         current_dir = Path(__file__).parent
         output_dir = current_dir / "output_images"
@@ -81,7 +81,7 @@ class TestRenderStyle:
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
                                 value_colors={"O": (200, 201, 202)},
-                                font_size=44)
+                                font_size=166)
         pixels = set(img.getdata())
         current_dir = Path(__file__).parent
         output_dir = current_dir / "output_images"
