@@ -1,9 +1,12 @@
 # PaintByChar
 
+<img src="assets/logo.png" alt="PaintByChar logo" width="600" />
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.12](https://img.shields.io/badge/python-3.12+-blue.svg)](https://python.org)
 [![PyPI version](https://img.shields.io/pypi/v/PaintByChar.svg)](https://pypi.org/project/PaintByChar/)
 [![Tests](https://github.com/jgd10/PaintByChar/actions/workflows/python-tests.yml/badge.svg)](https://github.com/jgd10/PaintByChar/actions/workflows/python-tests.yml)
+[![Docs](https://github.com/jgd10/PaintByChar/actions/workflows/docs.yml/badge.svg)](https://jgd10.github.io/PaintByChar/)
 
 A tiny Python library for turning ASCII grids into colorful images. It is designed for quick visualizations of mazes, maps, game boards, and Advent of Code-style 2D text puzzles.
 
@@ -64,7 +67,7 @@ The repository includes several runnable examples in the [`examples/`](examples/
 
 ## API reference
 
-See the [documentation](docs/api.md) for a quick overview of the public functions and options.
+See the [documentation](docs/api.md) for a quick overview of the public functions and options, or browse the live docs site once GitHub Pages is enabled.
 
 ## Contributing
 

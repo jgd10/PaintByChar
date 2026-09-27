@@ -26,5 +26,5 @@ pbc.save_image(img, "example.png")
 ## Documentation
 
 - [API reference](api.md)
-- [Examples directory](../examples)
-- [Project README](../README.md)
+- [Examples directory](https://github.com/jgd10/PaintByChar/tree/main/examples)
+- [Project README](https://github.com/jgd10/PaintByChar/blob/main/README.md)
