@@ -259,4 +259,3 @@ def save_image(img: Image, out_path: Path | str) -> None:
     """
     img.save(out_path)
     print(f"Saved image to {out_path}")
-
