@@ -61,7 +61,7 @@ class TestRenderStyle:
             self):
         m = load_main_module()
         img = m.string_to_image("A", background_color=(11, 22, 33),
-                                cell_size=10,
+                                cell_size=100,
                                 render_style=m.RenderStyle.COLORED_TEXT,
                                 value_colors={"A": (200, 201, 202)})
         pixels = list(img.getdata())
@@ -72,7 +72,7 @@ class TestRenderStyle:
             self):
         m = load_main_module()
         img = m.string_to_image("A", background_color=(11, 22, 33),
-                                cell_size=10,
+                                cell_size=100,
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
                                 value_colors={"A": (200, 201, 202)})
         pixels = list(img.getdata())
