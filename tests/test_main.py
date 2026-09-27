@@ -1,10 +1,8 @@
 import importlib.util
 import sys
 from pathlib import Path
-
 import pytest
-from PIL import ImageFont
-from fontTools.t1Lib import font_dictionary_keys
+from PIL import ImageFont, ImageDraw
 
 
 def load_main_module():
@@ -77,10 +75,13 @@ class TestRenderStyle:
     def test_string_to_image_background_mode_draws_character_in_background_color(
             self):
         m = load_main_module()
+        # Instead of ImageFont.load_default()
+        font = ImageFont.truetype("DejaVuSans.ttf", size=24)
         img = m.string_to_image("O", background_color=(11, 22, 33),
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
                                 value_colors={"O": (200, 201, 202)},
+                                font=font,
                                 font_size=166)
         pixels = set(img.getdata())
         current_dir = Path(__file__).parent
@@ -92,10 +93,13 @@ class TestRenderStyle:
 
     def test_string_to_image_COLORED_CELLS_mode_fills_every_pixel_in_cell(self):
         m = load_main_module()
+        # Instead of ImageFont.load_default()
+        font = ImageFont.truetype("DejaVuSans.ttf", size=24)
         img = m.string_to_image("A", background_color=(11, 22, 33),
                                 cell_size=10,
                                 render_style=m.RenderStyle.COLORED_CELLS,
-                                value_colors={"A": (200, 201, 202)})
+                                value_colors={"A": (200, 201, 202)},
+                                font=font)
         assert set(img.getdata()) == {(200, 201, 202)}
 
     def test_string_to_image_invalid_render_style(self):
