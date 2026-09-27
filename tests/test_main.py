@@ -65,34 +65,23 @@ class TestRenderStyle:
                                 value_colors={"O": (200, 201, 202)},
                                 font_size=166)
         pixels = set(img.getdata())
-        current_dir = Path(__file__).parent
-        output_dir = current_dir / "output_images"
-        output_dir.mkdir(parents=True, exist_ok=True)
-        m.save_image(img, output_dir / "test_output1.png")
         assert (11, 22, 33) in pixels
         assert (200, 201, 202) in pixels
 
     def test_string_to_image_background_mode_draws_character_in_background_color(
             self):
         m = load_main_module()
-        # Instead of ImageFont.load_default()
-        font = ImageFont.truetype("DejaVuSans.ttf", size=24)
         img = m.string_to_image("O", background_color=(11, 22, 33),
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
                                 value_colors={"O": (200, 201, 202)},
                                 font_size=166)
         pixels = set(img.getdata())
-        current_dir = Path(__file__).parent
-        output_dir = current_dir / "output_images"
-        output_dir.mkdir(parents=True, exist_ok=True)
-        m.save_image(img, output_dir / "test_output2.png")
         assert (200, 201, 202) in pixels
         assert (11, 22, 33) in pixels
 
     def test_string_to_image_COLORED_CELLS_mode_fills_every_pixel_in_cell(self):
         m = load_main_module()
-        # Instead of ImageFont.load_default()
         img = m.string_to_image("A", background_color=(11, 22, 33),
                                 cell_size=10,
                                 render_style=m.RenderStyle.COLORED_CELLS,
