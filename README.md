@@ -79,6 +79,9 @@ The repository includes several runnable examples in the [`examples/`](examples/
 See the [documentation](docs/api.md) for a quick overview of the public functions
 and options, or browse the [live docs site](https://paintbychar.readthedocs.io/en/latest/).
 
+There is also documentation on Read the Docs with installation instructions, 
+usage examples, and API reference. [Read the Docs](https://paintbychar.readthedocs.io/en/latest/index.html)
+
 ## Contributing
 
 Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions, testing guidance, and the pull request process.
