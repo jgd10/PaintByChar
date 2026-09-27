@@ -1,0 +1,57 @@
+******************************************************
+******************************************************
+**PPPPPPPPP   AA       IIIIIINNNN   NNNNNTTTTTTTTTTT**
+**PPPPPPPPP   AAA      IIIIIINNNN   NNNNNTTTTTTTTTTT**
+**PPPPPPPPPP AAAA      IIIIIINNNNN  NNNNNTTTTTTTTTTT**
+**PPPP  PPPP AAAAA     IIIIIINNNNN  NNNNNTTTTTTTTTTT**
+** PPP  PPPPAAAAAA      IIIINNNNNNN NNNNNTTTTTTT TTT**
+** PPP  PPPPAAAAAAA     IIIINNNNNNN NNNNN   TTTT    **
+** PPPPPPPPPAAAAAAA     IIIINNNNNNNNNNNNN   TTTT    **
+** PPPPPPPPAAA  AAAA    IIIINNNNNNNNNNNNN   TTTT    **
+** PPPPPPPAAAA  AAAA    IIIINNNNNNNNNNNNN   TTTT    **
+** PPP    AAAAAAAAAAA   IIIINNNNN NNNNNNN   TTTT    **
+** PPP   AAAAAAAAAAAA   IIIINNNNN NNNNNNN   TTTT    **
+** PPP   AAAAAAAAAAAAA  IIIINNNNN  NNNNNN   TTTT    **
+**PPPPP AAAA      AAAA IIIIIINNNN  NNNNNN  TTTTTT   **
+**PPPPP AAAA       AAAAIIIIIINNNN   NNNNN  TTTTTT   **
+**PPPPPAAAA        AAAAIIIIIINNNN   NNNNN  TTTTTT   **
+**PPPPPAAAA         AAAAIIIIINNNN    NNNN  TTTTTT   **
+**                                                  **
+**                                                  **
+**               BBBBBBBBB YYYY   YYYY              **
+**               BBBBBBBBB YYYY   YYYY              **
+**               BBBBBBBBBBYYYY   YYYY              **
+**               BBBB  BBBBYYYY  YYYYY              **
+**                BBB  BBBBYYYYY YYYYY              **
+**                BBB  BBBB YYYYYYYY                **
+**                BBBBBBBBB  YYYYYYY                **
+**                BBBBBBBB   YYYYYY                 **
+**                BBBBBBBBB   YYYYY                 **
+**                BBB  BBBB   YYYY                  **
+**                BBB  BBBB   YYYY                  **
+**                BBB  BBBB   YYYY                  **
+**               BBBBBBBBBB   YYYY                  **
+**               BBBBBBBBBB  YYYYYYY                **
+**               BBBBBBBBB   YYYYYYY                **
+**               BBBBBBBBB   YYYYYYY                **
+**                                                  **
+**                                                  **
+**    CCCCCCCHHHH  HHHHH       AA       RRRRRRRRR   **
+**  CCCCCCCCCHHHH  HHHHH       AAA      RRRRRRRRRR  **
+** CCCCCCCCCCHHHH  HHHHH      AAAA      RRRRRRRRRR  **
+** CCCCCCCCCCHHHH  HHHHH      AAAAA     RRRRR  RRRR **
+**CCCC   CCCCHHHH  HHHH      AAAAAA      RRRR  RRRR **
+**CCCC       HHHH  HHHH      AAAAAAA     RRRR  RRRR **
+**CCCC       HHHHHHHHHH     AAAAAAAA     RRRRRRRRR  **
+**CCCC       HHHHHHHHHH     AAA  AAAA    RRRRRRRRR  **
+**CCCC       HHHHHHHHHH    AAAA  AAAA    RRRRRRRRR  **
+**CCCC       HHHHHHHHHH    AAAAAAAAAAA   RRRR  RRRR **
+**CCCC       HHHH  HHHH   AAAAAAAAAAAA   RRRR  RRRR **
+**CCCC   CCCCHHHH  HHHH   AAAAAAAAAAAAA  RRRR  RRRR **
+** CCCCCCCCCCHHHH  HHHHH AAAA      AAAA RRRRR  RRRR **
+** CCCCCCCCCCHHHH  HHHHH AAAA       AAAARRRRR  RRRR **
+**  CCCCCCCCCHHHH  HHHHHAAAA        AAAARRRRR  RRRR **
+**    CCCCCCCHHHH  HHHHHAAAA         AAAARRRR  RRRR **
+******************************************************
+******************************************************
+
