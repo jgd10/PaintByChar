@@ -177,7 +177,7 @@ def string_to_image(grid_str: str,
     width = max(len(line) for line in lines)
 
     value_colors, font = get_set_mappings(cell_size, value_colors,
-                                            font_path, font_size, preset)
+                                          font_path, font_size, preset)
     background_color = resolve_color(background_color)
 
     img = Image.new('RGB', (width * cell_size, height * cell_size), background_color)
@@ -246,7 +246,10 @@ tuple[
     try:
         font = ImageFont.truetype(font_path, font_size)
     except OSError:
-        font = ImageFont.load_default()
+        try:
+            font = ImageFont.truetype("DejaVuSans.ttf", size=24)
+        except OSError:
+            font = ImageFont.load_default()
     return value_colors, font
 
 
