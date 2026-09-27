@@ -60,23 +60,22 @@ class TestRenderStyle:
     def test_string_to_image_background_color_is_used_for_empty_character_area(
             self):
         m = load_main_module()
-        img = m.string_to_image("A", background_color=(11, 22, 33),
+        img = m.string_to_image("O", background_color=(11, 22, 33),
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_TEXT,
-                                value_colors={"A": (200, 201, 202)})
-        pixels = list(img.getdata())
+                                value_colors={"O": (200, 201, 202)})
+        pixels = set(img.getdata())
         assert (11, 22, 33) in pixels
         assert (200, 201, 202) in pixels
 
     def test_string_to_image_background_mode_draws_character_in_background_color(
             self):
         m = load_main_module()
-        img = m.string_to_image("A", background_color=(11, 22, 33),
+        img = m.string_to_image("O", background_color=(11, 22, 33),
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
-                                value_colors={"A": (200, 201, 202)})
-        pixels = list(img.getdata())
-        print(pixels)
+                                value_colors={"O": (200, 201, 202)})
+        pixels = set(img.getdata())
         assert (200, 201, 202) in pixels
         assert (11, 22, 33) in pixels
 
