@@ -1,0 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.12](https://img.shields.io/badge/python-3.12+-blue.svg)](https://python.org)
+[![PyPI version](https://img.shields.io/pypi/v/PaintByChar.svg)](https://pypi.org/project/PaintByChar/)
+[![Docs](https://readthedocs.org/projects/paintbychar/badge/?version=latest)](https://paintbychar.readthedocs.io/en/latest/)
+[![Tests](https://github.com/jgd10/PaintByChar/actions/workflows/python-tests.yml/badge.svg)](https://github.com/jgd10/PaintByChar/actions/workflows/python-tests.yml)

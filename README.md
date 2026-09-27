@@ -5,8 +5,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.12](https://img.shields.io/badge/python-3.12+-blue.svg)](https://python.org)
 [![PyPI version](https://img.shields.io/pypi/v/PaintByChar.svg)](https://pypi.org/project/PaintByChar/)
+[![Docs](https://readthedocs.org/projects/paintbychar/badge/?version=latest)](https://paintbychar.readthedocs.io/en/latest/)
 [![Tests](https://github.com/jgd10/PaintByChar/actions/workflows/python-tests.yml/badge.svg)](https://github.com/jgd10/PaintByChar/actions/workflows/python-tests.yml)
-[![Docs](https://github.com/jgd10/PaintByChar/actions/workflows/docs.yml/badge.svg)](https://jgd10.github.io/PaintByChar/)
 
 A tiny Python library for turning ASCII grids into colorful images. It is designed for quick visualizations of mazes, maps, game boards, and Advent of Code-style 2D text puzzles.
 
@@ -54,14 +54,14 @@ pbc.save_image(img, "output_basic.png")
 ## Example output
 
 <div align="center">
-  <img src="assets/output_basic.png" alt="Basic example output" width="640" />
+  <img src="README_assets/output_basic.png" alt="Basic example output" width="640" />
 </div>
 
 ### More example images
 
 <div align="center">
-  <img src="assets/style_colored_text.png" alt="Styled text output" width="320" />
-  <img src="assets/output_preset_plasma.png" alt="Preset output" width="320" />
+  <img src="README_assets/style_colored_text.png" alt="Styled text output" width="320" />
+  <img src="README_assets/output_preset_plasma.png" alt="Preset output" width="320" />
 </div>
 
 ## More examples
@@ -76,8 +76,8 @@ The repository includes several runnable examples in the [`examples/`](examples/
 
 ## API reference
 
-See the [documentation](docs/api.md) for a quick overview of the public functions 
-and options, or browse the [live docs site](https://jgd10.github.io/PaintByChar/).
+See the [documentation](docs/api.md) for a quick overview of the public functions
+and options, or browse the [live docs site](https://paintbychar.readthedocs.io/en/latest/).
 
 ## Contributing
 
@@ -97,6 +97,4 @@ PaintByChar is currently a small, focused library aimed at grid-based text rende
 
 ## Social preview
 
-A repository preview image is included in [`assets/social-preview.png`]
-(assets/social-preview.png) and can be used as a GitHub social preview or banner 
-asset.
+A repository preview image is included in [`assets/social-preview.svg`](assets/social-preview.svg) and can be used as a GitHub social preview or banner asset.
