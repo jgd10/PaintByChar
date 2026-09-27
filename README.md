@@ -54,14 +54,14 @@ pbc.save_image(img, "output_basic.png")
 ## Example output
 
 <div align="center">
-  <img src="README_assets/output_basic.png" alt="Basic example output" width="640" />
+  <img src="assets/output_basic.png" alt="Basic example output" width="640" />
 </div>
 
 ### More example images
 
 <div align="center">
-  <img src="README_assets/style_colored_text.png" alt="Styled text output" width="320" />
-  <img src="README_assets/output_preset_plasma.png" alt="Preset output" width="320" />
+  <img src="assets/style_colored_text.png" alt="Styled text output" width="320" />
+  <img src="assets/output_preset_plasma.png" alt="Preset output" width="320" />
 </div>
 
 ## More examples
@@ -97,4 +97,6 @@ PaintByChar is currently a small, focused library aimed at grid-based text rende
 
 ## Social preview
 
-A repository preview image is included in [`assets/social-preview.svg`](assets/social-preview.svg) and can be used as a GitHub social preview or banner asset.
+A repository preview image is included in [`assets/social-preview.png`]
+(assets/social-preview.png) and can be used as a GitHub social preview or banner 
+asset.
