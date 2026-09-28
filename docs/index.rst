@@ -1,5 +1,5 @@
 PaintByChar documentation
-========================
+=========================
 
 Welcome to the PaintByChar documentation.
 
@@ -9,6 +9,7 @@ Welcome to the PaintByChar documentation.
 
    api
    examples
+   pypi-publishing
 
 Quick start
 -----------

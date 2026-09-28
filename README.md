@@ -100,4 +100,4 @@ PaintByChar is currently a small, focused library aimed at grid-based text rende
 
 ## Social preview
 
-A repository preview image is included in [`assets/social-preview.svg`](assets/social-preview.svg) and can be used as a GitHub social preview or banner asset.
+A repository preview image is included in [`assets/social-preview.png`](assets/social-preview.png) and can be used as a GitHub social preview or banner asset.
