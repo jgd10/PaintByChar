@@ -63,7 +63,7 @@ class TestRenderStyle:
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_TEXT,
                                 value_colors={"O": (200, 201, 202)},
-                                font_size=166)
+                                font_size=96)
         pixels = set(img.getdata())
         assert (11, 22, 33) in pixels
         assert (200, 201, 202) in pixels
@@ -75,7 +75,7 @@ class TestRenderStyle:
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
                                 value_colors={"O": (200, 201, 202)},
-                                font_size=166)
+                                font_size=96)
         pixels = set(img.getdata())
         assert (200, 201, 202) in pixels
         assert (11, 22, 33) in pixels

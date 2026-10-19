@@ -4,10 +4,11 @@ from typing import Optional
 import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
 from typing import Tuple, Union
+import platform
 
 from PIL.ImageFont import FreeTypeFont
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 
 COLOR_PRESETS: dict[str, tuple[int, int, int]] = {
@@ -240,16 +241,24 @@ tuple[
         value_colors = {}
     # Use bold Consolas if available, else fallback
     if font_path is None:
-        font_path = "consolab.ttf"  # Bold Consolas
+        font_path = Path(__file__).parent / "fonts" / "RobotoMono-Regular.ttf"
     if font_size is None:
         font_size = int(cell_size)
     try:
         font = ImageFont.truetype(font_path, font_size)
     except OSError:
         try:
-            font = ImageFont.truetype("DejaVuSans.ttf", size=24)
+            match platform.system():
+                case "Windows":
+                    font = ImageFont.truetype("Arial.ttf", size=24)
+                case "Darwin":
+                    font = ImageFont.truetype("Arial.ttf", size=24)
+                case "Linux":
+                    font = ImageFont.truetype("DejaVuSans.ttf", size=24)
+                case _:
+                    font = ImageFont.load_default()
         except OSError:
-            font = ImageFont.load_default()
+            raise OSError(f"Could not load font from {font_path}, nor could Arial or DejaVuSans be loaded. Please ensure the font file exists.")
     return value_colors, font
 
 
