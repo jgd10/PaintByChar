@@ -8,7 +8,7 @@ from PIL import ImageFont, ImageDraw
 def load_main_module():
     # Load src/main.py by path to avoid package import issues.
     root = Path(__file__).resolve().parents[1]
-    src_path = root / "src" / "paintbychar.py"
+    src_path = root / "src" / "paintbychar" / "core.py"
     spec = importlib.util.spec_from_file_location("project_main", src_path)
     module = importlib.util.module_from_spec(spec)
     sys.modules["project_main"] = module
