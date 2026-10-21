@@ -208,13 +208,23 @@ def string_to_image(grid_str: str,
 
 
 def draw_character(background_color: tuple[int, int, int], cell_size: int,
-                   char: str, draw: ImageDraw, font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
-                   x: int, y: int):
-    bbox = draw.textbbox((0, 0), char, font=font)
-    w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    tx = x * cell_size + (cell_size - w) // 2
-    ty = y * cell_size + (cell_size - h) // 2
-    draw.text((tx, ty), char, fill=background_color, font=font)
+                   char: str, draw: ImageDraw.ImageDraw,
+                   font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
+                   x: int, y: int) -> None:
+    ascent, descent = font.getmetrics()
+    baseline = (
+        y * cell_size
+        + (cell_size - ascent - descent) / 2
+        + ascent
+    )
+
+    draw.text(
+        (x * cell_size + cell_size / 2, baseline),
+        char,
+        fill=background_color,
+        font=font,
+        anchor="ms",
+    )
 
 
 def get_set_mappings(cell_size: int,
@@ -250,15 +260,23 @@ tuple[
         try:
             match platform.system():
                 case "Windows":
-                    font = ImageFont.truetype("Arial.ttf", size=24)
+                    font = ImageFont.truetype("Arial.ttf", size=font_size)
                 case "Darwin":
-                    font = ImageFont.truetype("Arial.ttf", size=24)
+                    font = ImageFont.truetype("Arial.ttf", size=font_size)
                 case "Linux":
-                    font = ImageFont.truetype("DejaVuSans.ttf", size=24)
+                    font = ImageFont.truetype("DejaVuSans.ttf", size=font_size)
                 case _:
-                    font = ImageFont.load_default()
+                    font = ImageFont.load_default(size=font_size)
         except OSError:
             raise OSError(f"Could not load font from {font_path}, nor could Arial or DejaVuSans be loaded. Please ensure the font file exists.")
+    if isinstance(font, ImageFont.FreeTypeFont):
+        available = max(1, cell_size - 4)
+        while font.size > 1:
+            ascent, descent = font.getmetrics()
+            if ascent + descent <= available and font.getlength("M") <= available:
+                break
+            font = font.font_variant(size=font.size - 1)
+
     return value_colors, font
 
 
