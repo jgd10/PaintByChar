@@ -8,7 +8,7 @@ from PIL import ImageFont, ImageDraw
 def load_main_module():
     # Load src/main.py by path to avoid package import issues.
     root = Path(__file__).resolve().parents[1]
-    src_path = root / "src" / "paintbychar.py"
+    src_path = root / "src" / "paintbychar" / "core.py"
     spec = importlib.util.spec_from_file_location("project_main", src_path)
     module = importlib.util.module_from_spec(spec)
     sys.modules["project_main"] = module
@@ -63,8 +63,8 @@ class TestRenderStyle:
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_TEXT,
                                 value_colors={"O": (200, 201, 202)},
-                                font_size=166)
-        pixels = set(img.getdata())
+                                font_size=96)
+        pixels = set(img.get_flattened_data())
         assert (11, 22, 33) in pixels
         assert (200, 201, 202) in pixels
 
@@ -75,8 +75,8 @@ class TestRenderStyle:
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
                                 value_colors={"O": (200, 201, 202)},
-                                font_size=166)
-        pixels = set(img.getdata())
+                                font_size=96)
+        pixels = set(img.get_flattened_data())
         assert (200, 201, 202) in pixels
         assert (11, 22, 33) in pixels
 
@@ -86,7 +86,7 @@ class TestRenderStyle:
                                 cell_size=10,
                                 render_style=m.RenderStyle.COLORED_CELLS,
                                 value_colors={"A": (200, 201, 202)})
-        assert set(img.getdata()) == {(200, 201, 202)}
+        assert set(img.get_flattened_data()) == {(200, 201, 202)}
 
     def test_string_to_image_invalid_render_style(self):
         m = load_main_module()
@@ -134,7 +134,7 @@ def test_missing_character_mapping_uses_black():
     m = load_main_module()
     img = m.string_to_image("A", cell_size=10,
                             render_style=m.RenderStyle.COLORED_CELLS)
-    assert set(img.getdata()) == {(0, 0, 0)}
+    assert set(img.get_flattened_data()) == {(0, 0, 0)}
 
 
 @pytest.mark.parametrize("value", [True, False])
@@ -144,7 +144,7 @@ def test_bool_rgb(value):
                             value_colors={'A': (value, value, value)},
                             render_style=m.RenderStyle.COLORED_CELLS,
                             background_color='red')
-    assert set(img.getdata()) == {(value, value, value)}
+    assert set(img.get_flattened_data()) == {(value, value, value)}
 
 
 def test_preset_takes_precedence_over_character_mapping():

@@ -1,4 +1,4 @@
-from .paintbychar import (
+from .core import (
     RenderStyle,
     InputError,
     string_to_image,
@@ -28,3 +28,4 @@ __all__ = [
     "COLOR_PRESETS",
     "__version__",
 ]
+
