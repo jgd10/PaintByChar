@@ -173,6 +173,8 @@ def string_to_image(grid_str: str,
     Returns:
         Image: The generated image.
     """
+    if preset is not None and preset not in PRESETS:
+        raise ValueError(f"Unknown preset: {preset}")
     check_grid_string(grid_str)
     lines = grid_str.strip().split('\n')
     height = len(lines)
