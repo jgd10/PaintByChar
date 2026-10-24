@@ -24,6 +24,8 @@ A tiny Python library for turning ASCII grids into colorful images. It is design
 - Preset colormaps such as `viridis`, `plasma`, and `terrain`
 - Custom `value_colors` dictionaries for full control over mapping
 - Render modes: filled cells, colored text, and colored cells with background text
+- Comes bundled with `RobotoMono-Regular.ttf`
+  - Provide a path to any true type font to use that instead!
 
 ## Install
 
@@ -93,6 +95,8 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+The bundled Roboto Mono font is separately licensed under the SIL Open Font License (OFL). See [`src/fonts/OFL.txt`](src/fonts/OFL.txt) for its license terms.
 
 ## Project status
 

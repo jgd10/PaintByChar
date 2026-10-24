@@ -8,7 +8,7 @@ from PIL import ImageFont, ImageDraw
 def load_main_module():
     # Load src/main.py by path to avoid package import issues.
     root = Path(__file__).resolve().parents[1]
-    src_path = root / "src" / "paintbychar.py"
+    src_path = root / "src" / "paintbychar" / "core.py"
     spec = importlib.util.spec_from_file_location("project_main", src_path)
     module = importlib.util.module_from_spec(spec)
     sys.modules["project_main"] = module
@@ -41,6 +41,21 @@ def test_get_set_mappings_font_fallback():
                                                                    ImageFont.ImageFont))
 
 
+def test_get_set_mappings_loads_local_truetype_font():
+    m = load_main_module()
+    font_path = Path(__file__).resolve().parent / "OpenSans-Bold.ttf"
+
+    _, font = m.get_set_mappings(
+        cell_size=48,
+        value_colors=None,
+        font_path=font_path,
+        font_size=36,
+        preset=None,
+    )
+
+    assert isinstance(font, ImageFont.FreeTypeFont)
+
+
 class TestRenderStyle:
     @pytest.mark.parametrize("style", ["COLORED_CELLS", "COLORED_TEXT",
         "COLORED_CELLS_WITH_BACKGROUND_TEXT"])
@@ -63,8 +78,8 @@ class TestRenderStyle:
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_TEXT,
                                 value_colors={"O": (200, 201, 202)},
-                                font_size=166)
-        pixels = set(img.getdata())
+                                font_size=96)
+        pixels = set(img.get_flattened_data())
         assert (11, 22, 33) in pixels
         assert (200, 201, 202) in pixels
 
@@ -75,8 +90,8 @@ class TestRenderStyle:
                                 cell_size=100,
                                 render_style=m.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT,
                                 value_colors={"O": (200, 201, 202)},
-                                font_size=166)
-        pixels = set(img.getdata())
+                                font_size=96)
+        pixels = set(img.get_flattened_data())
         assert (200, 201, 202) in pixels
         assert (11, 22, 33) in pixels
 
@@ -86,7 +101,7 @@ class TestRenderStyle:
                                 cell_size=10,
                                 render_style=m.RenderStyle.COLORED_CELLS,
                                 value_colors={"A": (200, 201, 202)})
-        assert set(img.getdata()) == {(200, 201, 202)}
+        assert set(img.get_flattened_data()) == {(200, 201, 202)}
 
     def test_string_to_image_invalid_render_style(self):
         m = load_main_module()
@@ -130,11 +145,26 @@ def test_string_to_image_rejects_non_positive_cell_size(cell_size):
         m.string_to_image("A", cell_size=cell_size)
 
 
+@pytest.mark.parametrize("font_size", [0, -1])
+def test_string_to_image_rejects_non_positive_font_size(font_size):
+    m = load_main_module()
+
+    with pytest.raises(ValueError):
+        m.string_to_image("A", font_size=font_size)
+
+
+def test_string_to_image_rejects_unknown_preset():
+    m = load_main_module()
+
+    with pytest.raises(ValueError):
+        m.string_to_image("A", preset="not-a-preset")
+
+
 def test_missing_character_mapping_uses_black():
     m = load_main_module()
     img = m.string_to_image("A", cell_size=10,
                             render_style=m.RenderStyle.COLORED_CELLS)
-    assert set(img.getdata()) == {(0, 0, 0)}
+    assert set(img.get_flattened_data()) == {(0, 0, 0)}
 
 
 @pytest.mark.parametrize("value", [True, False])
@@ -144,7 +174,7 @@ def test_bool_rgb(value):
                             value_colors={'A': (value, value, value)},
                             render_style=m.RenderStyle.COLORED_CELLS,
                             background_color='red')
-    assert set(img.getdata()) == {(value, value, value)}
+    assert set(img.get_flattened_data()) == {(value, value, value)}
 
 
 def test_preset_takes_precedence_over_character_mapping():
@@ -283,8 +313,148 @@ class TestColorPresets:
             for channel in color:
                 assert 0 <= channel <= 255
 
-# TODO: Add a test once the expected behavior for an unknown preset is defined.
-# TODO: Add tests for font_size=0, negative font_size, and a valid custom font.
-# TODO: Add tests for empty files, CRLF files, and Unicode file contents.
-# TODO: Add tests for save_image overwriting files and nonexistent parent 
-#  paths.
+
+def test_local_truetype_font_produces_different_image_from_default():
+    m = load_main_module()
+    font_path = Path(__file__).resolve().parent / "OpenSans-Bold.ttf"
+    grid = "MWilgy"
+
+    default_image = m.string_to_image(
+        grid,
+        cell_size=48,
+        font_size=36,
+        render_style=m.RenderStyle.COLORED_TEXT,
+        value_colors={char: (0, 0, 0) for char in grid},
+    )
+    custom_image = m.string_to_image(
+        grid,
+        cell_size=48,
+        font_size=36,
+        font_path=font_path,
+        render_style=m.RenderStyle.COLORED_TEXT,
+        value_colors={char: (0, 0, 0) for char in grid},
+    )
+
+    assert custom_image.size == default_image.size
+    assert list(custom_image.get_flattened_data()) != list(
+        default_image.get_flattened_data()
+    )
+    
+@pytest.mark.parametrize("font_size", [0, -1])
+def test_string_to_image_rejects_non_positive_font_size(font_size):
+    m = load_main_module()
+
+    with pytest.raises(ValueError):
+        m.string_to_image("A", font_size=font_size)
+
+
+def test_string_to_image_rejects_unknown_preset():
+    m = load_main_module()
+
+    with pytest.raises(ValueError):
+        m.string_to_image("A", preset="not-a-preset")
+
+
+def test_file_to_image_rejects_empty_file(tmp_path):
+    m = load_main_module()
+    path = tmp_path / "empty.txt"
+    path.write_text("")
+
+    with pytest.raises(m.InputError):
+        m.file_to_image(path)
+
+
+def test_file_to_image_reads_crlf_file(tmp_path):
+    m = load_main_module()
+    path = tmp_path / "crlf.txt"
+    path.write_bytes(b"AB\r\nCD\r\n")
+
+    img = m.file_to_image(
+        path,
+        cell_size=6,
+        value_colors={char: (1, 2, 3) for char in "ABCD"},
+        render_style=m.RenderStyle.COLORED_CELLS,
+    )
+
+    assert img.size == (12, 12)
+
+
+def test_file_to_image_reads_unicode_contents(tmp_path):
+    m = load_main_module()
+    path = tmp_path / "unicode.txt"
+    path.write_text("é界\nΩ中", encoding="utf-8")
+
+    img = m.file_to_image(
+        path,
+        cell_size=6,
+        value_colors={char: (1, 2, 3) for char in "é界Ω中"},
+        render_style=m.RenderStyle.COLORED_CELLS,
+    )
+
+    assert img.size == (12, 12)
+
+
+def test_save_image_overwrites_existing_file(tmp_path):
+    from PIL import Image
+
+    m = load_main_module()
+    path = tmp_path / "output.png"
+    first = Image.new("RGB", (1, 1), (10, 20, 30))
+    second = Image.new("RGB", (1, 1), (40, 50, 60))
+
+    m.save_image(first, path)
+    m.save_image(second, path)
+
+    with Image.open(path) as saved:
+        assert saved.getpixel((0, 0)) == (40, 50, 60)
+
+
+def test_save_image_rejects_nonexistent_parent_directory(tmp_path):
+    from PIL import Image
+
+    m = load_main_module()
+    img = Image.new("RGB", (1, 1), (10, 20, 30))
+    path = tmp_path / "missing" / "output.png"
+
+    with pytest.raises(FileNotFoundError):
+        m.save_image(img, path)
+
+
+@pytest.mark.parametrize(
+    ("system_name", "expected_font"),
+    [
+        ("Windows", "Arial.ttf"),
+        ("Darwin", "Arial.ttf"),
+        ("Linux", "DejaVuSans.ttf"),
+    ],
+)
+def test_get_set_mappings_uses_platform_fallback_font(
+    monkeypatch, system_name, expected_font
+):
+    m = load_main_module()
+    requested_fonts = []
+    fallback_font = object()
+
+    def fake_truetype(font, size):
+        requested_fonts.append((font, size))
+        if len(requested_fonts) == 1:
+            raise OSError("Simulate unavailable requested font")
+        return fallback_font
+
+    monkeypatch.setattr(m.platform, "system", lambda: system_name)
+    monkeypatch.setattr(m.ImageFont, "truetype", fake_truetype)
+
+    with pytest.warns(UserWarning, match="Attempting to load system fonts"):
+        _, loaded_font = m.get_set_mappings(
+            cell_size=12,
+            value_colors={"A": (1, 2, 3)},
+            font_path=Path("missing-font.ttf"),
+            font_size=12,
+            preset=None,
+        )
+
+    assert loaded_font is fallback_font
+    assert requested_fonts == [
+        (Path("missing-font.ttf"), 12),
+        (expected_font, 12),
+    ]

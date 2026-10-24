@@ -4,10 +4,12 @@ from typing import Optional
 import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
 from typing import Tuple, Union
+import platform
+import warnings
 
 from PIL.ImageFont import FreeTypeFont
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 
 COLOR_PRESETS: dict[str, tuple[int, int, int]] = {
@@ -171,6 +173,8 @@ def string_to_image(grid_str: str,
     Returns:
         Image: The generated image.
     """
+    if preset is not None and preset not in PRESETS:
+        raise ValueError(f"Unknown preset: {preset}")
     check_grid_string(grid_str)
     lines = grid_str.strip().split('\n')
     height = len(lines)
@@ -207,13 +211,23 @@ def string_to_image(grid_str: str,
 
 
 def draw_character(background_color: tuple[int, int, int], cell_size: int,
-                   char: str, draw: ImageDraw, font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
-                   x: int, y: int):
-    bbox = draw.textbbox((0, 0), char, font=font)
-    w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    tx = x * cell_size + (cell_size - w) // 2
-    ty = y * cell_size + (cell_size - h) // 2
-    draw.text((tx, ty), char, fill=background_color, font=font)
+                   char: str, draw: ImageDraw.ImageDraw,
+                   font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
+                   x: int, y: int) -> None:
+    ascent, descent = font.getmetrics()
+    baseline = (
+        y * cell_size
+        + (cell_size - ascent - descent) / 2
+        + ascent
+    )
+
+    draw.text(
+        (x * cell_size + cell_size / 2, baseline),
+        char,
+        fill=background_color,
+        font=font,
+        anchor="ms",
+    )
 
 
 def get_set_mappings(cell_size: int,
@@ -240,16 +254,38 @@ tuple[
         value_colors = {}
     # Use bold Consolas if available, else fallback
     if font_path is None:
-        font_path = "consolab.ttf"  # Bold Consolas
+        font_path = Path(__file__).parent / "fonts" / "RobotoMono-Regular.ttf"
     if font_size is None:
         font_size = int(cell_size)
     try:
         font = ImageFont.truetype(font_path, font_size)
-    except OSError:
+    except OSError as error:
+        warnings.warn(
+            f"Could not load font from {font_path}: {error}. "
+            "Attempting to load system fonts.",
+            UserWarning,
+            stacklevel=2,
+        )
         try:
-            font = ImageFont.truetype("DejaVuSans.ttf", size=24)
+            match platform.system():
+                case "Windows":
+                    font = ImageFont.truetype("Arial.ttf", size=font_size)
+                case "Darwin":
+                    font = ImageFont.truetype("Arial.ttf", size=font_size)
+                case "Linux":
+                    font = ImageFont.truetype("DejaVuSans.ttf", size=font_size)
+                case _:
+                    font = ImageFont.load_default(size=font_size)
         except OSError:
-            font = ImageFont.load_default()
+            raise OSError(f"Could not load font from {font_path}, nor could Arial or DejaVuSans be loaded. Please ensure the font file exists.")
+    if isinstance(font, ImageFont.FreeTypeFont):
+        available = max(1, cell_size - 4)
+        while font.size > 1:
+            ascent, descent = font.getmetrics()
+            if ascent + descent <= available and font.getlength("M") <= available:
+                break
+            font = font.font_variant(size=font.size - 1)
+
     return value_colors, font
 
 

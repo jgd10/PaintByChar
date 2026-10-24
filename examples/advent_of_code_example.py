@@ -94,7 +94,8 @@ def visualize_steps(path: list[tuple[int, int, int]]):
         string = draw_path_on_terrain(TERRAIN, path_by_step)
 
         img = pbc.string_to_image(string, value_colors=value_colors,
-                                  cell_size=24, background_color='charcoal',
+                                  cell_size=96, background_color='charcoal',
+                                  font_size=72,
                                   render_style=pbc.RenderStyle.COLORED_CELLS_WITH_BACKGROUND_TEXT)
         out = Path(__file__).resolve().parent / "generated"
         pbc.save_image(img, out / f"path_step_{i:03d}.png")
